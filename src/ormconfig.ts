@@ -7,6 +7,8 @@ const config: DataSourceOptions = {
     username: 'devuser',
     password: '1234',
     database: 'blog',
+    entities: [__dirname + '/**/*.entity.{.ts, .js}'],
+    synchronize: true, //don't use on production!!
 };
 
 export default config;
