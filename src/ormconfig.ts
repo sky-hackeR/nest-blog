@@ -5,9 +5,9 @@ const config: DataSourceOptions = {
     host: 'localhost',
     port: 5432,
     username: 'devuser',
-    password: '1234',
+    password: 'mypassword',
     database: 'blog',
-    entities: [__dirname + '/**/*.entity.{.ts, .js}'],
+    entities: [__dirname + '/**/*.entity{.ts,.js}'],
     synchronize: true, //don't use on production!!
 };
 
