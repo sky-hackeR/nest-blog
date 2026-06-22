@@ -1,9 +1,11 @@
 import { CreateUserDto } from "@/user/dto/createUser.dto";
+import { LoginDto } from "@/user/dto/loginUser.dto";
 import { IUserResponse } from "@/user/types/userResponse.interface";
 import { UserEntity } from "@/user/user.entity";
 import { HttpException, HttpStatus, Injectable } from "@nestjs/common"
 import { InjectRepository } from "@nestjs/typeorm";
-import { sign, verify } from "jsonwebtoken";
+import { sign } from "jsonwebtoken";
+import { compare } from "bcrypt";
 import { Repository } from "typeorm";
 
 
@@ -33,6 +35,31 @@ export class UserService{
 
         const savedUser = await this.userRepository.save(newUser);
         return this.generateUserResponse(savedUser)
+    }
+
+    async loginUser(loginUserDto: LoginDto): Promise<UserEntity> {
+
+        const user = await this.userRepository.findOne({
+            where: {
+                email: loginUserDto.email
+            },
+        });
+
+        if(!user){
+            throw new HttpException('Wrong email or password', HttpStatus.UNAUTHORIZED);
+        }
+
+        const matchPassword = await compare(loginUserDto.password, user.password);
+
+        if(!matchPassword){
+            throw new HttpException('Wrong email or password', HttpStatus.UNAUTHORIZED);
+        }
+
+
+        delete user.password
+
+
+        return user;
     }
 
     generateToken(user: UserEntity): string {        

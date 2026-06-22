@@ -22,7 +22,7 @@ export class UserEntity {
 
 
     @Column()
-    password!: string;
+    password?: string;
 
     @BeforeInsert()
     @BeforeUpdate()
